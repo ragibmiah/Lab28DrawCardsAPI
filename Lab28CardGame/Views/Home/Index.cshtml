@@ -1,32 +1,4 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-    <h2>Remaining: @ViewBag.Remaining</h2>
-    <div>
-        <h3>Current Draw</h3>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th width="40%">Image</th>
-                <th width="30%">Value</th>
-                <th width="30%">Suit</th>
-
-            </tr>
-
-
-            @for (int i = 0; i < ViewBag.Cards.Count; i++)
-            {
-                <tr>
-                    <td>
-                        <img src="@ViewBag.Cards[i].image"
-                            height="86" width="86" />
-                    </td>
-                    <td>@ViewBag.Cards[i].value</td>
-                    <td>
-                       @ViewBag.Cards[i].suit
-                    </td>
-                </tr>
-            }
-        </table>
-
-        @*@Html.ActionLink("Draw", "Add", new {}, new { @class = "btn btn-primary" }) |*@
-    </div>
+    <a href="/Home/About" class="btn btn-primary">Go To Deck</a>

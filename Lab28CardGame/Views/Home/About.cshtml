@@ -1,7 +1,35 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
+<h2>Remaining: @ViewBag.Remaining</h2>
+<div>
+    <h3>Current Draw</h3>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th width="60%">Image</th>
+            <th width="20%">Value</th>
+            <th width="20%">Suit</th>
 
-<p>Use this area to provide additional information.</p>
+        </tr>
+
+
+        @for (int i = 0; i < @ViewBag.Cards.Count; i++)
+            {
+            <tr>
+                <th>
+                    @ViewBag.Cards[i].value
+                </th>
+                <th>
+                    @ViewBag.Cards[i].suit
+                </th>
+
+                <td>
+                    <img src="@ViewBag.Cards[i].image" width="100" />
+                </td>
+
+            </tr>
+        }
+    </table>
+
+    @Html.ActionLink("Draw", "About", new { }, new { @class = "btn btn-primary" })
+</div>

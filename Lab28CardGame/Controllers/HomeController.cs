@@ -13,7 +13,7 @@ namespace Lab28CardGame.Controllers
     {
         public ActionResult Index()
         {
-            HttpWebRequest WR = WebRequest.CreateHttp("https://deckofcardsapi.com/api/deck/new/draw/?count=5");
+            HttpWebRequest WR = WebRequest.CreateHttp("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
             WR.UserAgent = ".NET Framework Test Client";
 
             HttpWebResponse Response;
@@ -42,12 +42,8 @@ namespace Lab28CardGame.Controllers
             try
             {
                 JObject JsonData = JObject.Parse(Card);
-                ViewBag.Cards = JsonData["cards"];
-                ViewBag.deckID = JsonData["deck_id"];
-                //ViewBag.Image = JsonData["cards"]["image"];
-                //ViewBag.Value = JsonData["cards"]["value"];
-                //ViewBag.Suit = JsonData["cards"]["suit"];
-                ViewBag.Remaining = JsonData["remaining"];
+                Session["deckID"] = JsonData["deck_id"];
+                
 
 
             }
@@ -64,7 +60,49 @@ namespace Lab28CardGame.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            var ID = Session["deckID"];
+            HttpWebRequest WR = WebRequest.CreateHttp($"https://deckofcardsapi.com/api/deck/{ID}/draw/?count=5");
+            WR.UserAgent = ".NET Framework Test Client";
+
+            HttpWebResponse Response;
+
+            try
+            {
+                Response = (HttpWebResponse)WR.GetResponse();
+            }
+            catch (WebException e)
+            {
+                ViewBag.Error = "Exception";
+                ViewBag.ErrorDescription = e.Message;
+                return View();
+            }
+
+            if (Response.StatusCode != HttpStatusCode.OK)
+            {
+                ViewBag.Error = Response.StatusCode;
+                ViewBag.ErrorDescription = Response.StatusDescription;
+                return View();
+            }
+
+            StreamReader reader = new StreamReader(Response.GetResponseStream());
+            string DrawCard = reader.ReadToEnd();
+
+            try
+            {
+                JObject JsonData = JObject.Parse(DrawCard);
+                
+                ViewBag.Cards = JsonData["cards"];
+                ViewBag.Remaining = JsonData["remaining"];
+
+
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = "JSON Issue";
+                ViewBag.ErrorDescription = e.Message;
+                return View();
+            }
+
 
             return View();
         }
